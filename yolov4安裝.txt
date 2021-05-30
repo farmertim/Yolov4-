@@ -1,0 +1,68 @@
+一.安裝python 版本3.7.7 https://www.python.org/downloads/release/python-377/
+
+二.確認安裝pyhton版本 pip -V
+
+三.設定環境變數-->系統變數-->Path-->新增剛剛安裝完的python的兩個路徑
+	1.C:\Users\AppData\Local\Programs\Python\Python37
+	2.C:\Users\AppData\Local\Programs\Python\Python37\Scripts  注意有裝anaconda 的話要兩個路徑都要移置anaconda 的上面
+
+四.回到cmd中安裝numpy  pip install numpy
+
+五.下載 Git and CMake
+
+六.下載visual studio 2019 (要載Python開發 and 使用C++的桌面開發)
+
+七.更新NVDIA 驅動程式 去官網下載驅動程式 產品系列等等選項可以到 工作管理員-->效能-->底下的NVDIA 去做查看
+
+八.安裝Cuda Toolkit版本10.2 下載LOCAL 版 放到C曹跟目錄(比較好找)
+
+九.安裝cudnn 要先去註冊 根據cuda 的版本來找(v7.6.5) 下載完之後放到C曹底下
+
+十.打開C:\cuda 把bin、include、lib 的資料夾複製到C:\Program FIles\NVIDIA Computing Toolket\CUDA\v10.2  直接取代掉
+
+十一.下載opencv 4.1.0 網址:https://opencv.org/releases/page/3/ 之後點Sources
+
+十二.下載opencv contrib 網址:https://github.com/opencv/opencv_contrib
+
+十三.去C曹下建立資料資料夾opencv 把十一、十二 解壓縮到opencv 資料夾
+
+十四.先在剛建立好的資料夾opencv 裡面建立build 資料夾，然後進入到opencv-->opencv-4.1.0-->cmake-->打開OpenCVDetectPython 把裡面的python2 全部改為python3
+
+十五.打開CMake 在srouce code 選擇C:\opencv\opencv-4.1.0 接這 build 選擇剛剛建立資料夾的opencv->build 接著 configue 選擇安裝visual studio 的版本剛剛安裝vs2019 下一個欄位根據電腦來選擇這邊是x64
+
+十六.開始執行 假如出錯可以先看opencv 環境變數是否有對等等 都沒有問_SETUP的話可以修改 找到上面紅色的地方把 OPENCV_GENERATE_SETUPVARS 勾勾給取消掉、BUILD_opencv_world 打勾 再一次config 沒有錯誤就genrate，去看opencv-->build 裡面就會出現很多東西
+
+十七.打開C:\opencv-->build 的ALL_BUILD.vcxproj 把上面建置的地方改為release and x64，之後打開方案總管的CMakeTargets 裡面的ALL_BUILD點右鍵按建置，在輸出的地方會看到60個成功0個失敗，接著點INSTALL點右鍵按下建置在輸出的地方會有兩個成功0個失敗，打開cmd 寫python 接著import cv2 成功後 接著確認剛剛下載的版本cv2.__versoin__
+
+十八.在C跟目錄的地方新增一個資料夾取名為Yolov4，打開剛剛取名為Yolov4的資料夾在路徑的地方打cmd 執行後 打 git clone https://github.com/AlexeyAB/darknet
+
+十九.複製C:\opencv\build\bin\Release\opencv_ffmpeg410_64.dll and C:\opencv\build\bin\Release\opencv_world410.dll複製到 C:\yolov4\darknet\build\darknet\x64 裡面
+
+二十.C:\Program File\NVIDA GPU Computing Toolkit\CUDA\v10.2\bin\cudnn64_7 複製到 C:\yolov4\darknet\build\darknet\x64 裡面
+
+二一.打開C:\yolov4\darknet\build\darknet 裡面的darknet.cvxproj 找到cuda 10.0 修改為10.2(共兩個地方需要修改)
+
+二二.build C:\yolov4\darknet\build\darknet 裡面的yolo_cpp_dll.vcxproj 一樣改release and x64，yolo_cpp_dll點右鍵按建置(一個成功)
+
+二三.打開C:\yolov4\darknet\build\darknet\darknet.sln 一樣感改成Release x64 去方案總管darknet按右鍵點選最底下的屬性
+	1.去C/C++ --> 一般-->其他include 目錄 旁邊下拉式點選編輯 進去裡面後點黃色新增的圖示 把C:opencv\build\install\include 的路徑複製起來貼上(都是依照自己檔案的位置去做處理)
+	2.去C/C++ -->前置處理器-->前置處理器定義 旁邊下拉式點選編輯 把CUDNN_HALF給刪掉 點確定按套用
+	3.CUDA C/C++ -->Device -->Code Generation 旁邊下拉式點選編輯 最上面的地方把Compute_75,sm_75(可能不是每個人都一樣，選最底下的那列刪掉，因為我們是用cuda 10.2 所以樣把它刪掉，假如是10.0的話就可以保留著)
+	4.連接器-->一般 --> 其他程式目錄 旁邊下拉式點選編輯 去裡面後點黃色新增的圖示 把C:opencv\build\install\x64\vc16\lib 的路徑給貼上(都是依照自己檔案的位置去做處理)
+	5.都OK之後按下確定 點darknet 點選右鍵按下建置 成功之後就完成了
+
+二四.下載yolov4權重黨放在C:\yolov4\darknet\build\darknet\x64 下，打開x64路徑下的cmd 去做測試 darknet.exe detctor test cfg/yolov4.cfg yolov4.weights
+
+二五.接下來輸入預測照片的路徑 就會有預測的東西出來表示就成功了
+
+
+
+
+
+
+
+
+
+
+
+參考資料:https://www.youtube.com/watch?v=PVf16gIhnek
